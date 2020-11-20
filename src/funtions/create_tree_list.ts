@@ -1,4 +1,3 @@
-import * as fs from 'graceful-fs'
 import path from 'path'
 
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
