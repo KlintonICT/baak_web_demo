@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<script src="./assets/vendors/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 <style>
 
 path.link {
@@ -37,15 +38,80 @@ text {
   pointer-events: none;
 }
 
+.btn {
+  width: 30px;
+  height: 30px;
+  background: #FFF;
+  border: 1px solid #005bac;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  color: #005bac;
+  padding: 15px 10px 5px;
+  position: fixed;
+  text-align: center;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+	transition: all 0.3s ease;
+}
+.btn:hover {
+  background: #eef;
+  cursor: pointer;
+}
+
+.zoom {
+  bottom: 190px;
+}
+
+.zoom-out {
+  bottom: 120px;
+}
+.zoom-init {
+  bottom: 50px;
+}
+
+body {
+    overflow:auto;
+}
+
+.target {
+    overflow:auto;
+}
+ 
 </style>
 <body>
+  <a class="btn zoom"><i class="fas fa-search-plus"></i></a>
+  <a class="btn zoom-out"><i class="fas fa-search-minus"></i></a>
+  <a class="btn zoom-init"><i class="fas fa-recycle"></i></a>
 
-<script src="./assets/js/script.js"></script>
+  <div class="target"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  var zoom = 1;
+		
+  $('.zoom').on('click', function(){
+    zoom += 0.1;
+    $('.target').css('zoom', zoom);
+  });
+  $('.zoom-init').on('click', function(){
+    zoom = 1;
+    $('.target').css('zoom', zoom);
+  });
+  $('.zoom-out').on('click', function(){
+    zoom -= 0.1;
+    $('.target').css('zoom', zoom);
+  });
+</script>
+
 <script>
 
 // get the data
-d3.csv("/data/treeList.csv", function(error, links) {
-
+d3.csv("./data/treeListNew.csv", function(error, links) {
+ 
 var nodes = {};
 
 // Compute the distinct nodes from the links.
@@ -76,8 +142,8 @@ var force = d3.layout.force()
     .start();
 
 // Set the range
-var  v = d3.scale.linear().range([0, 100]);
-
+var  v = d3.scale.linear().range([0, 5]);
+ 
 // Scale the range of the data
 v.domain([0, d3.max(links, function(d) { return d.value; })]);
 
@@ -93,8 +159,8 @@ links.forEach(function(link) {
 		link.type = "onezerozero";
 	}
 });
-
-var svg = d3.select("body").append("svg")
+ 
+var svg = d3.select(".target").append("svg")
     .attr("width", width)
     .attr("height", height);
 
@@ -104,10 +170,10 @@ svg.append("svg:defs").selectAll("marker")
   .enter().append("svg:marker")    // This section adds in the arrows
     .attr("id", String)
     .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 15)
+    .attr("refX", 22)
     .attr("refY", -1.5)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
+    .attr("markerWidth", 3)
+    .attr("markerHeight", 3)
     .attr("orient", "auto")
   .append("svg:path")
     .attr("d", "M0,-5L10,0L0,5");
@@ -130,7 +196,7 @@ var node = svg.selectAll(".node")
 
 // add the nodes
 node.append("circle")
-    .attr("r", 5)
+    .attr("r", 6)
     .style("fill", function(d) { return color(d.name); });
 
 
