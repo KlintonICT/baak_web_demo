@@ -3,3 +3,7 @@ node_modules
 
 #dist
 dist
+
+# lock file
+yarn.lock
+package-lock.json
