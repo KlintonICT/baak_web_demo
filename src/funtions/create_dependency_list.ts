@@ -18,24 +18,26 @@ export const createDependencyList = (repositoriesList: any[]) => {
   let dependencyList: Array<Dependency> = []
 
   repositoriesList.forEach(repository => {
-    if (repository.deps.length > 0) {
-      repository.deps.forEach((dep: any) => {
-        if (dependencyList.length > 0) {
-          if (!dependencyList.some(d => d.name === dep.name)) {
+    if (repository.deps) {
+      if (repository.deps.length > 0) {
+        repository.deps.forEach((dep: any) => {
+          if (dependencyList.length > 0) {
+            if (!dependencyList.some(d => d.name === dep.name)) {
+              dependencyList.push({
+                name: dep.name,
+                version: dep.version,
+                nameAndVersion: `${dep.name}@${dep.version}`
+              })  
+            }
+          } else {
             dependencyList.push({
               name: dep.name,
               version: dep.version,
               nameAndVersion: `${dep.name}@${dep.version}`
-            })  
+            })
           }
-        } else {
-          dependencyList.push({
-            name: dep.name,
-            version: dep.version,
-            nameAndVersion: `${dep.name}@${dep.version}`
-          })
-        }
-      })
+        })
+      }
     }
   })
 

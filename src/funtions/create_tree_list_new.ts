@@ -8,7 +8,7 @@ const dataFolder = path.resolve("data");
 const writeTree = async (treeList: any[]) => {
   try {
     const csvWriter = createCsvWriter({
-      path: `${path.join(dataFolder, "treeListNew.csv")}`,
+      path: `${path.join(dataFolder, "treeListNew_1500.csv")}`,
       header: [
         { id: "source", title: "source" },
         { id: "target", title: "target" },
@@ -38,17 +38,19 @@ export const createTreeListNew = (
 
   dependencyList.forEach((dependency) => {
     repositories.forEach((repository) => {
-      if (repository.deps.length >= 0 && repository.name !== dependency.name) {
-        if (
-          repository.deps.some(
-            (dep: { name: any }) => dep.name === dependency.name
-          )
-        ) {
-          treeList.push({
-            source: `${repository.name}@${repository.version}`,
-            target: dependency.nameAndVersion,
-            value: 1,
-          });
+      if (repository.deps) {
+        if (repository.deps.length >= 0 && repository.name !== dependency.name) {
+          if (
+            repository.deps.some(
+              (dep: { name: any }) => dep.name === dependency.name
+            )
+          ) {
+            treeList.push({
+              source: `${repository.name}@${repository.version}`,
+              target: dependency.nameAndVersion,
+              value: 1,
+            });
+          }
         }
       }
     });
